@@ -1,0 +1,18 @@
+TODO: vary noise probability using a sine wave
+- should have moments with full clarity
+
+TODO: can we record little clips somehow?
+- we only need up to 30 frames per clip or so
+- randomly choose a number of frames to record, decrement a counter?
+- keep a count of total recorded frames
+
+TODO: try glitching vertically
+
+
+
+
+
+[DONE] TODO: try updating line by line with some probability
+- could also shift the lines sideways with small probability
+
+[DONE] TODO: create glitch_v2.py script
