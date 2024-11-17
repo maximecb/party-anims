@@ -19,16 +19,15 @@ cv2.setWindowProperty("image", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
 while True:
 
-    # Use a 16:9 aspect ratio
-    # What is the default 1080p resolution? 1920x1080
-    img = np.zeros((720, 1280, 3), dtype=np.uint8)
+    # 1080p resolution, 16:9 aspect ration, like the projector
+    img = np.zeros((1080, 1920, 3), dtype=np.uint8)
 
 
 
     font.putText(img=img,
         text='Merry Christmas',
-        org=(200, 200),
-        fontHeight=140,
+        org=(240, 300),
+        fontHeight=250,
         color=(0, 0, 255),
         thickness=-1,
         line_type=cv2.LINE_AA,
