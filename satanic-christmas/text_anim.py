@@ -3,11 +3,73 @@
 import time
 import math
 import random
-import threading
+from threading import Thread
 import aubio
 import numpy as np
 import sounddevice as sd
 import cv2
+
+
+
+
+
+
+def audio_thread():
+    """
+    Beat detection thread
+    """
+
+    samplerate = 44100
+    win_s = 1024        # fft size
+    hop_s = win_s // 2  # hop size
+
+    a_tempo = aubio.tempo("default", win_s, hop_s, samplerate)
+
+    stream = sd.InputStream(samplerate=samplerate, blocksize=400, channels=1, dtype=np.float32, latency='low')
+    stream.start()
+
+    beat_no = 0
+    loud_vals = []
+
+    while True:
+        samples, overflowed = stream.read(hop_s)
+        samples = samples.squeeze()
+        loudness = np.std(samples)
+        loud_vals.append(loudness)
+        print(loudness)
+
+        if (len(loud_vals) > 500):
+            loud_vals.pop(0)
+
+        # Loudness threshold for beat detection
+        # Stops beats when the music stops
+        if max(loud_vals[-10:]) < 0.05:
+            beat = False
+        else:
+            # Note: we can call o.get_last_s() to get the sample where the beat occurred
+            beat = a_tempo(samples)
+
+
+        # TODO:
+        # Act on the beat
+
+
+        if beat:
+            print('|' * 40)
+            beat_no += 1
+        else:
+            print()
+
+    stream.end()
+
+thread = Thread(target = audio_thread)
+thread.start()
+#thread.join()
+
+
+
+
+
 
 
 
@@ -86,7 +148,7 @@ font.loadFontData(fontFileName='ferrum.otf', id=0)
 cv2.namedWindow("image", cv2.WINDOW_NORMAL)
 
 # Make window fullscreen
-cv2.setWindowProperty("image", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+#cv2.setWindowProperty("image", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
 # 1080p resolution, 16:9 aspect ration, like the projector
 width = 1920
@@ -105,29 +167,32 @@ fb = np.zeros((height, width, 3), dtype=np.float32)
 
 
 text = draw_text(width, height)
-
-
 print(text.dtype)
-
-
 fb += text
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 while True:
 
-
-
     for i in range(10):
         draw_noise_line(fb)
 
     fb *= 0.999
-
-
     # Show the current frame
     cv2.imshow('image', fb) 
-
-
 
     # Quit when 'q' is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'): 
@@ -141,3 +206,15 @@ while True:
 
 
 cv2.destroyAllWindows()
+
+
+
+
+
+
+
+
+
+
+
+
