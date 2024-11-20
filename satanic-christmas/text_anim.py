@@ -1,7 +1,83 @@
 #!/usr/bin/env python3
 
+import time
+import math
+import random
+import threading
+import aubio
+import numpy as np
+import sounddevice as sd
 import cv2
-import numpy as np   
+
+
+
+
+class Anim:
+    """
+    Base class for animations
+    """
+
+    def __init__(self):
+        pass
+
+    # Reset state, used when switching animations
+    def restart(self):
+        pass
+
+    def beat(self):
+        pass
+
+    def render(self, fb, frame_idx, t):
+        raise NotImplementedError
+
+class MerryChristmas(Anim):
+    def __init__(self):
+        pass
+
+    def render(self, fb, frame_idx, t):
+        pass
+
+
+
+
+
+
+
+
+
+def draw_text(width, height):
+    img = np.zeros((height, width, 3), dtype=np.uint8)
+
+    font.putText(img,
+        text='Merry Christmas',
+        org=(240, 300),
+        fontHeight=250,
+        color=(0, 0, 255),
+        thickness=-1,
+        line_type=cv2.LINE_AA,
+        bottomLeftOrigin=False,
+    )
+
+    return img.astype(np.float32) / 255
+
+def draw_noise_line(img):
+    p1 = np.random.randint(low=(0, 0), high=(width, height), size=2, dtype=int)
+    p2 = np.random.randint(low=(0, 0), high=(width, height), size=2, dtype=int)
+
+    cv2.line(
+        img,
+        p1,
+        p2,
+        color=(0, 0, 0),
+        lineType=cv2.LINE_AA,
+        thickness=1
+    )
+
+
+
+
+
+
 
 # Load a custom font
 font = cv2.freetype.createFreeType2()
@@ -25,35 +101,6 @@ fb = np.zeros((height, width, 3), dtype=np.float32)
 
 
 
-def draw_text(width, height):
-    img = np.zeros((height, width, 3), dtype=np.uint8)
-
-    font.putText(img,
-        text='Merry Christmas',
-        org=(240, 300),
-        fontHeight=250,
-        color=(0, 0, 255),
-        thickness=-1,
-        line_type=cv2.LINE_AA,
-        bottomLeftOrigin=False,
-    )
-
-    return img.astype(np.float32) / 255
-
-
-
-def draw_noise_line(img):
-    p1 = np.random.randint(low=(0, 0), high=(width, height), size=2, dtype=int)
-    p2 = np.random.randint(low=(0, 0), high=(width, height), size=2, dtype=int)
-
-    cv2.line(
-        img,
-        p1,
-        p2,
-        color=(0, 0, 0),
-        lineType=cv2.LINE_AA,
-        thickness=1
-    )
 
 
 
