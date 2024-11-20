@@ -8,7 +8,7 @@ import aubio
 import numpy as np
 import sounddevice as sd
 import cv2
-
+import socket
 
 
 
@@ -34,6 +34,10 @@ def audio_thread():
     while True:
         samples, overflowed = stream.read(hop_s)
         samples = samples.squeeze()
+
+        # Amplify the audio
+        samples *= 12
+
         loudness = np.std(samples)
         loud_vals.append(loudness)
         print(loudness)
