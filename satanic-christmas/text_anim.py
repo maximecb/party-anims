@@ -12,66 +12,30 @@ import socket
 
 
 
+class BeatClient:
+    def __init__(self, server_addr="192.168.1.211", server_port=7777):
+        # Create and bind the local socket
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.sock.bind(("0.0.0.0", 9999))
 
+        # Non-blocking mode
+        self.sock.settimeout(0)
 
-def audio_thread():
-    """
-    Beat detection thread
-    """
+        # Send subscribe message to server
+        self.sock.sendto(b"sub", (server_addr, server_port))
 
-    samplerate = 44100
-    win_s = 1024        # fft size
-    hop_s = win_s // 2  # hop size
-
-    a_tempo = aubio.tempo("default", win_s, hop_s, samplerate)
-
-    stream = sd.InputStream(samplerate=samplerate, blocksize=400, channels=1, dtype=np.float32, latency='low')
-    stream.start()
-
-    beat_no = 0
-    loud_vals = []
-
-    while True:
-        samples, overflowed = stream.read(hop_s)
-        samples = samples.squeeze()
-
-        # Amplify the audio
-        samples *= 12
-
-        loudness = np.std(samples)
-        loud_vals.append(loudness)
-        print(loudness)
-
-        if (len(loud_vals) > 500):
-            loud_vals.pop(0)
-
-        # Loudness threshold for beat detection
-        # Stops beats when the music stops
-        if max(loud_vals[-10:]) < 0.05:
-            beat = False
-        else:
-            # Note: we can call o.get_last_s() to get the sample where the beat occurred
-            beat = a_tempo(samples)
-
-
-        # TODO:
-        # Act on the beat
-
-
-        if beat:
-            print('|' * 40)
-            beat_no += 1
-        else:
-            print()
-
-    stream.end()
-
-thread = Thread(target = audio_thread)
-thread.start()
-#thread.join()
-
-
-
+    def beat_received(self):
+        try:
+            # Receive a UDP packet
+            data, addr = self.sock.recvfrom(1024)
+            return True
+        except socket.error as e:
+            if e.args[0] == socket.EAGAIN:
+                # No data available, try again later
+                return False
+            else:
+                # Handle other socket errors
+                print(f"Socket error: {e}")
 
 
 
@@ -102,6 +66,7 @@ class MerryChristmas(Anim):
 
     def render(self, fb, frame_idx, t):
         pass
+
 
 
 
@@ -142,6 +107,7 @@ def draw_noise_line(img):
 
 
 
+beatclient = BeatClient()
 
 
 
@@ -171,7 +137,6 @@ fb = np.zeros((height, width, 3), dtype=np.float32)
 
 
 text = draw_text(width, height)
-print(text.dtype)
 fb += text
 
 
@@ -190,6 +155,18 @@ fb += text
 
 
 while True:
+
+
+    if beatclient.beat_received():
+        print("|" * 40)
+    else:
+        print()
+    
+
+
+
+
+
 
     for i in range(10):
         draw_noise_line(fb)
@@ -210,15 +187,3 @@ while True:
 
 
 cv2.destroyAllWindows()
-
-
-
-
-
-
-
-
-
-
-
-
