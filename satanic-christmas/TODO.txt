@@ -1,0 +1,40 @@
+TODO: clone pyopendmx repo
+
+TODO: make the Christmas animation slowly fade and only start the lines
+after 1 or 2 seconds for dramatic effect
+
+TODO: test on projector screen in the dark
+- need to know if this is actually feasible
+
+TODO: try to alternate animations every 10s
+TODO: plain hs fadeout animation
+
+TODO: modify the code to use the animation class
+
+TODO: write the Merry Christmas animation class
+- make it just fade Merry Christmas for now?
+
+
+
+
+
+[DONE] TODO: try to set up animation loop with fixed frame rate
+- need to figure out current frame rate, time since last frame?
+- compute effective fps, how much delay to add
+t = time.time()
+
+[DONE] TODO: fix wifi problem
+
+[DONE] TODO: send a UDP packet on every beat to this device
+
+[DONE] TODO: try to create line fading animation
+np.random.randint(low, high=None, size=None, dtype=int)
+Return random integers from low (inclusive) to high (exclusive).
+
+[DONE] TODO: setup repo with deploy keys
+
+[DONE] TODO: test line drawing
+
+[DONE] TODO: check that opencv freetype2 works
+
+[DONE] TODO: look for CC-0 TTF fonts

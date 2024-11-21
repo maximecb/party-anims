@@ -4,9 +4,7 @@ import time
 import math
 import random
 from threading import Thread
-import aubio
 import numpy as np
-import sounddevice as sd
 import cv2
 import socket
 
@@ -148,13 +146,15 @@ fb += text
 
 
 
-
-
-
-
-
-
 while True:
+
+    start_t = time.time()
+
+
+
+    # Dummy text rendering
+    draw_text(width, height)
+
 
 
     if beatclient.beat_received():
@@ -179,11 +179,15 @@ while True:
     if cv2.waitKey(1) & 0xFF == ord('q'): 
         break
   
+    end_t = time.time()
+    frame_t = end_t - start_t
+    fps = 1 / frame_t
+    #print("fps: {:.1f}".format(fps))
 
-
-
-
-
-
+    # Limit the update rate to 30fps
+    t_30fps = 1 / 30
+    if frame_t < t_30fps:
+        #print(t_30fps - frame_t)
+        time.sleep(t_30fps - frame_t)
 
 cv2.destroyAllWindows()
