@@ -7,6 +7,7 @@ from threading import Thread
 import numpy as np
 import cv2
 import socket
+import itertools
 
 
 
@@ -52,18 +53,56 @@ class Anim:
     def restart(self):
         pass
 
-    def beat(self):
+    def beat(self, beat_idx, t):
         pass
 
     def render(self, fb, frame_idx, t):
         raise NotImplementedError
 
-class MerryChristmas(Anim):
+
+
+
+class MerryHS(Anim):
     def __init__(self):
         pass
 
+
+
+    def beat(self, fb, beat_idx, t):
+        fb[:] = 0
+
+        if beat_idx % 2 == 0:
+            text = draw_text(
+                fb.shape[0],
+                fb.shape[1],
+                x=240,
+                y=300,
+                font_size=250,
+                text="Merry Christmas"
+            )
+        else:
+            text = draw_text(
+                fb.shape[0],
+                fb.shape[1],
+                x=460,
+                y=300,
+                font_size=250,
+                text="Hail Satan"
+            )
+
+        fb += text
+
+
+
+
+
+
     def render(self, fb, frame_idx, t):
-        pass
+
+        for i in range(50):
+            draw_noise_line(fb)
+
+        fb *= 0.88
 
 
 
@@ -71,22 +110,20 @@ class MerryChristmas(Anim):
 
 
 
-
-
-
-def draw_text(width, height):
+def draw_text(fb_width, fb_height, x, y, font_size, text):
     img = np.zeros((height, width, 3), dtype=np.uint8)
 
     font.putText(img,
-        text='Merry Christmas',
-        org=(240, 300),
-        fontHeight=250,
+        text=text,
+        org=(x, y),
+        fontHeight=font_size,
         color=(0, 0, 255),
         thickness=-1,
         line_type=cv2.LINE_AA,
         bottomLeftOrigin=False,
     )
 
+    # Convert to float32
     return img.astype(np.float32) / 255
 
 def draw_noise_line(img):
@@ -105,9 +142,9 @@ def draw_noise_line(img):
 
 
 
+
+
 beatclient = BeatClient()
-
-
 
 # Load a custom font
 font = cv2.freetype.createFreeType2()
@@ -126,52 +163,23 @@ height = 1080
 # In floating point format so we can fade out easily
 fb = np.zeros((height, width, 3), dtype=np.float32)
 
+anim = MerryHS()
 
+beat_idx = 0
 
-
-
-
-
-
-
-text = draw_text(width, height)
-fb += text
-
-
-
-
-
-
-
-
-
-
-while True:
+for frame_idx in itertools.count(start=0):
 
     start_t = time.time()
 
-
-
-    # Dummy text rendering
-    draw_text(width, height)
-
-
-
     if beatclient.beat_received():
         print("|" * 40)
+        anim.beat(fb, beat_idx, start_t)
+        beat_idx += 1
     else:
         print()
     
+    anim.render(fb, frame_idx, start_t)
 
-
-
-
-
-
-    for i in range(10):
-        draw_noise_line(fb)
-
-    fb *= 0.999
     # Show the current frame
     cv2.imshow('image', fb) 
 

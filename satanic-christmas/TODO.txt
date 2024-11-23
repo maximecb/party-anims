@@ -14,9 +14,25 @@ TODO: modify the code to use the animation class
 TODO: write the Merry Christmas animation class
 - make it just fade Merry Christmas for now?
 
+-----------------------------------------------------------------------------
+
+TODO: can we reduce the frame size?
+- try to center it
+- make it 720p?
+
+TODO: test with projector on the wall
+
+TODO: try alternating every two beats. Show Erinn.
+
+commit
 
 
 
+[DONE] TODO: get a simple alternating animation going
+- beat-driven
+=> KISS
+
+-----------------------------------------------------------------------------
 
 [DONE] TODO: try to set up animation loop with fixed frame rate
 - need to figure out current frame rate, time since last frame?
