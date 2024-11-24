@@ -16,17 +16,24 @@ TODO: write the Merry Christmas animation class
 
 -----------------------------------------------------------------------------
 
-TODO: can we reduce the frame size?
-- try to center it
-- make it 720p?
+TODO: try to program KORHAL animation
+- will need to mask out letters
+  - maybe figure out some vertical bands for the letter extents or boundaries
+- we'll want to mask everything except a given letter?
+=> note that technically we can render the text just once
+=> we have 6 letters
 
-TODO: test with projector on the wall
-
-TODO: try alternating every two beats. Show Erinn.
-
-commit
+TODO: test with projector on the wall ****
 
 
+
+
+
+[DONE] TODO: try alternating every two beats.
+- may be able not to clear the buffer
+
+[DONE] TODO: option for a simulated beat
+--sim_beat
 
 [DONE] TODO: get a simple alternating animation going
 - beat-driven

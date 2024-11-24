@@ -8,8 +8,7 @@ import numpy as np
 import cv2
 import socket
 import itertools
-
-
+import sys
 
 class BeatClient:
     def __init__(self, server_addr="192.168.1.211", server_port=7777):
@@ -35,11 +34,6 @@ class BeatClient:
             else:
                 # Handle other socket errors
                 print(f"Socket error: {e}")
-
-
-
-
-
 
 class Anim:
     """
@@ -69,10 +63,10 @@ class MerryHS(Anim):
 
 
     def beat(self, fb, beat_idx, t):
-        fb[:] = 0
+        #fb[:] = 0
 
-        if beat_idx % 2 == 0:
-            text = draw_text(
+        if beat_idx % 4 == 0:
+            fb += draw_text(
                 fb.shape[0],
                 fb.shape[1],
                 x=240,
@@ -80,8 +74,8 @@ class MerryHS(Anim):
                 font_size=250,
                 text="Merry Christmas"
             )
-        else:
-            text = draw_text(
+        elif beat_idx % 4 == 2:
+            fb += draw_text(
                 fb.shape[0],
                 fb.shape[1],
                 x=460,
@@ -90,19 +84,12 @@ class MerryHS(Anim):
                 text="Hail Satan"
             )
 
-        fb += text
-
-
-
-
-
-
     def render(self, fb, frame_idx, t):
 
         for i in range(50):
             draw_noise_line(fb)
 
-        fb *= 0.88
+        fb *= 0.94
 
 
 
@@ -139,10 +126,10 @@ def draw_noise_line(img):
         thickness=1
     )
 
-
-
-
-
+# Simulate a beat
+sim_beat = False
+if len(sys.argv) == 2 and sys.argv[1] == '--sim_beat':
+    sim_beat = True
 
 beatclient = BeatClient()
 
@@ -171,7 +158,7 @@ for frame_idx in itertools.count(start=0):
 
     start_t = time.time()
 
-    if beatclient.beat_received():
+    if beatclient.beat_received() or (sim_beat and frame_idx % 15 == 0):
         print("|" * 40)
         anim.beat(fb, beat_idx, start_t)
         beat_idx += 1
