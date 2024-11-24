@@ -9,6 +9,7 @@ import cv2
 import socket
 import itertools
 import sys
+import argparse
 
 class BeatClient:
     def __init__(self, server_addr="192.168.1.211", server_port=7777):
@@ -65,37 +66,31 @@ class MerryHS(Anim):
     def beat(self, fb, beat_idx, t):
         #fb[:] = 0
 
-        if beat_idx % 4 == 0:
+        if beat_idx % 16 == 0:
             fb += draw_text(
                 fb.shape[0],
                 fb.shape[1],
-                x=240,
+                x=220,
                 y=300,
-                font_size=250,
+                font_size=260,
                 text="Merry Christmas"
             )
-        elif beat_idx % 4 == 2:
+        elif beat_idx % 16 == 8:
             fb += draw_text(
                 fb.shape[0],
                 fb.shape[1],
                 x=460,
                 y=300,
-                font_size=250,
+                font_size=260,
                 text="Hail Satan"
             )
 
     def render(self, fb, frame_idx, t):
 
-        for i in range(50):
+        for i in range(60):
             draw_noise_line(fb)
 
-        fb *= 0.94
-
-
-
-
-
-
+        fb *= 0.995
 
 def draw_text(fb_width, fb_height, x, y, font_size, text):
     img = np.zeros((height, width, 3), dtype=np.uint8)
@@ -126,10 +121,11 @@ def draw_noise_line(img):
         thickness=1
     )
 
-# Simulate a beat
-sim_beat = False
-if len(sys.argv) == 2 and sys.argv[1] == '--sim_beat':
-    sim_beat = True
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--sim_beat', action='store_true')
+parser.add_argument('--fullscreen', action='store_true')
+opts = parser.parse_args()
 
 beatclient = BeatClient()
 
@@ -140,7 +136,8 @@ font.loadFontData(fontFileName='ferrum.otf', id=0)
 cv2.namedWindow("image", cv2.WINDOW_NORMAL)
 
 # Make window fullscreen
-#cv2.setWindowProperty("image", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+if opts.fullscreen:
+    cv2.setWindowProperty("image", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
 # 1080p resolution, 16:9 aspect ration, like the projector
 width = 1920
@@ -158,7 +155,7 @@ for frame_idx in itertools.count(start=0):
 
     start_t = time.time()
 
-    if beatclient.beat_received() or (sim_beat and frame_idx % 15 == 0):
+    if beatclient.beat_received() or (opts.sim_beat and frame_idx % 15 == 0):
         print("|" * 40)
         anim.beat(fb, beat_idx, start_t)
         beat_idx += 1

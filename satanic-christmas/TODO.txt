@@ -16,6 +16,8 @@ TODO: write the Merry Christmas animation class
 
 -----------------------------------------------------------------------------
 
+TODO: try to make text out of noise
+
 TODO: try to program KORHAL animation
 - will need to mask out letters
   - maybe figure out some vertical bands for the letter extents or boundaries
@@ -23,11 +25,12 @@ TODO: try to program KORHAL animation
 => note that technically we can render the text just once
 => we have 6 letters
 
-TODO: test with projector on the wall ****
 
 
 
 
+
+[DONE] TODO: test with projector on the wall
 
 [DONE] TODO: try alternating every two beats.
 - may be able not to clear the buffer
