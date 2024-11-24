@@ -54,14 +54,9 @@ class Anim:
     def render(self, fb, frame_idx, t):
         raise NotImplementedError
 
-
-
-
 class MerryHS(Anim):
     def __init__(self):
         pass
-
-
 
     def beat(self, fb, beat_idx, t):
         #fb[:] = 0
@@ -86,11 +81,60 @@ class MerryHS(Anim):
             )
 
     def render(self, fb, frame_idx, t):
-
         for i in range(60):
             draw_noise_line(fb)
+        fb *= 0.995
+
+class Korhal(Anim):
+    def __init__(self, fb_shape):
+        # Pre-render KORHAL text
+        self.korhal = draw_text(
+            fb_shape[0],
+            fb_shape[1],
+            x=220,
+            y=180,
+            font_size=500,
+            text="KORHAL"
+        )
+
+        self.on_the_decks = draw_text(
+            fb_shape[0],
+            fb_shape[1],
+            x=445,
+            y=700,
+            font_size=200,
+            text="ON THE DECKS"
+        )
+
+        # Pre-render some noise
+        self.noise = [np.random.uniform(0, 1, size=fb_shape) for i in range(0, 8)]
+
+    def beat(self, fb, beat_idx, t):
+        #fb[:] = 0
+
+        #fb[:] = self.korhal[:]
+
+        #fb += self.on_the_decks
+
+        pass
+
+
+
+    def render(self, fb, frame_idx, t):
+        fb[:] = self.korhal[:]
+
+        #fb += self.on_the_decks * np.random.uniform(0, 1, size=fb.shape)
+
+        fb += self.on_the_decks * self.noise[frame_idx % len(self.noise)]
 
         fb *= 0.995
+
+
+
+
+
+
+
 
 def draw_text(fb_width, fb_height, x, y, font_size, text):
     img = np.zeros((height, width, 3), dtype=np.uint8)
@@ -147,7 +191,12 @@ height = 1080
 # In floating point format so we can fade out easily
 fb = np.zeros((height, width, 3), dtype=np.float32)
 
-anim = MerryHS()
+
+#anim = MerryHS()
+anim = Korhal(fb.shape)
+
+
+
 
 beat_idx = 0
 
