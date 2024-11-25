@@ -97,13 +97,22 @@ class Korhal(Anim):
             text="KORHAL"
         )
 
-        self.on_the_decks = draw_text(
+        self.on = draw_text(
             fb_shape[0],
             fb_shape[1],
             x=445,
             y=700,
             font_size=200,
-            text="ON THE DECKS"
+            text="ON THE"
+        )
+
+        self.the_decks = draw_text(
+            fb_shape[0],
+            fb_shape[1],
+            x=1050,
+            y=700,
+            font_size=200,
+            text="DECKS"
         )
 
         # Pre-render some noise
@@ -120,20 +129,21 @@ class Korhal(Anim):
         ]
 
     def beat(self, fb, beat_idx, t):
-        l_min, l_max = self.letter_exts[beat_idx % len(self.letter_exts)]
-        fb[:, l_min:l_max] += self.korhal[:, l_min:l_max]
+        beat_idx = beat_idx % 8
 
-        if beat_idx % 6 == 0:
-            fb += self.on_the_decks
-
-
-
+        if beat_idx < 6:
+            l_min, l_max = self.letter_exts[beat_idx % len(self.letter_exts)]
+            fb[:, l_min:l_max] += self.korhal[:, l_min:l_max]
+        elif beat_idx == 6:
+            fb += self.on
+        else:
+            fb += self.the_decks
 
     def render(self, fb, frame_idx, t):
-        #for i in range(60):
-        #    draw_noise_line(fb)
+        for i in range(60):
+            draw_noise_line(fb)
 
-        fb *= 0.93
+        fb *= 0.97
 
 
 
