@@ -16,19 +16,16 @@ TODO: write the Merry Christmas animation class
 
 -----------------------------------------------------------------------------
 
-TODO: try to make text out of noise
-
-TODO: try to program KORHAL animation
-- will need to mask out letters
-  - maybe figure out some vertical bands for the letter extents or boundaries
-- we'll want to mask everything except a given letter?
-=> note that technically we can render the text just once
-=> we have 6 letters
+TODO: random frame glitch
+TODO: Merry Christmas with random left-right row shift
 
 
 
 
 
+[DONE] TODO: try to program KORHAL animation
+
+[DONE] TODO: try to draw red lines between letter coordinates
 
 [DONE] TODO: test with projector on the wall
 

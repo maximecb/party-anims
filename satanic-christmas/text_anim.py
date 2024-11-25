@@ -109,28 +109,31 @@ class Korhal(Anim):
         # Pre-render some noise
         self.noise = [np.random.uniform(0, 1, size=fb_shape) for i in range(0, 8)]
 
+        # Bounds of the letters
+        self.letter_exts = [
+            (230, 480),
+            (480, 740),
+            (740, 960),
+            (960, 1240),
+            (1240, 1500),
+            (1500, 1720),
+        ]
+
     def beat(self, fb, beat_idx, t):
-        #fb[:] = 0
+        l_min, l_max = self.letter_exts[beat_idx % len(self.letter_exts)]
+        fb[:, l_min:l_max] += self.korhal[:, l_min:l_max]
 
-        #fb[:] = self.korhal[:]
+        if beat_idx % 6 == 0:
+            fb += self.on_the_decks
 
-        #fb += self.on_the_decks
-
-        pass
 
 
 
     def render(self, fb, frame_idx, t):
-        fb[:] = self.korhal[:]
+        #for i in range(60):
+        #    draw_noise_line(fb)
 
-        #fb += self.on_the_decks * np.random.uniform(0, 1, size=fb.shape)
-
-        fb += self.on_the_decks * self.noise[frame_idx % len(self.noise)]
-
-        fb *= 0.995
-
-
-
+        fb *= 0.93
 
 
 
