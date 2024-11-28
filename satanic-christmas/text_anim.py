@@ -142,12 +142,70 @@ class Korhal(Anim):
     def render(self, fb, frame_idx, t):
         for i in range(60):
             draw_noise_line(fb)
-
         fb *= 0.97
 
 
 
 
+class Rescue(Anim):
+    def __init__(self, fb_shape):
+        # Pre-render RESCUE text
+        self.rescue = draw_text(
+            fb_shape[0],
+            fb_shape[1],
+            x=220,
+            y=180,
+            font_size=500,
+            text="RESCUE"
+        )
+
+        self.on_the_decks = draw_text(
+            fb_shape[0],
+            fb_shape[1],
+            x=445,
+            y=700,
+            font_size=200,
+            text="ON THE DECKS"
+        )
+
+        # Pre-render some noise
+        self.noise = [np.random.uniform(0, 1, size=fb_shape) for i in range(0, 8)]
+
+        self.intensity = 0
+
+    def render_frame(self, fb, frame_idx, t):
+        fb[:] = self.rescue[:]
+        fb += self.on_the_decks
+        fb *= self.noise[frame_idx % len(self.noise)]
+        fb[:] = glitch(fb) * self.intensity
+
+    def beat(self, fb, beat_idx, t):
+        self.intensity = 1
+        self.render_frame(fb, beat_idx, t)
+
+    def render(self, fb, frame_idx, t):
+        self.intensity *= 0.90
+
+        if random.uniform(0, 1) < 0.25:
+            return
+
+        self.render_frame(fb, beat_idx, t)
+
+
+        
+
+
+def glitch(img):
+    out = np.empty_like(img)
+
+    for row in range(0, img.shape[0]):
+        if random.uniform(0, 1) < 0.1:
+            out[row] = 0
+        else:
+            shift = random.randint(-3, 3)
+            out[row] = np.roll(img[row], shift, axis=0)
+
+    return out
 
 def draw_text(fb_width, fb_height, x, y, font_size, text):
     img = np.zeros((height, width, 3), dtype=np.uint8)
@@ -223,8 +281,7 @@ for frame_idx in itertools.count(start=0):
         beat_idx += 1
     else:
         print()
-    
-    anim.render(fb, frame_idx, start_t)
+        anim.render(fb, frame_idx, start_t)
 
     # Show the current frame
     cv2.imshow('image', fb) 

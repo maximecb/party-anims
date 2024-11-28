@@ -24,9 +24,15 @@ TODO: random frame glitch
 TODO: Merry Christmas with random left-right row shift
 - you could also render one frame out of 2 or only render some frames for additionaly glitchiness
 
+TODO: random vertical shift in glitch fn
 
 
 
+
+
+[DONE] TODO: rescue glitch anim
+
+[DONE] TODO: glitch fn
 
 [DONE] TODO: make KORHAL anim mod8
 
