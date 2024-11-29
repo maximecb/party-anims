@@ -186,14 +186,10 @@ class Rescue(Anim):
     def render(self, fb, frame_idx, t):
         self.intensity *= 0.90
 
-        if random.uniform(0, 1) < 0.25:
+        if random.uniform(0, 1) < 0.10:
             return
 
         self.render_frame(fb, beat_idx, t)
-
-
-        
-
 
 def glitch(img):
     out = np.empty_like(img)
@@ -202,8 +198,11 @@ def glitch(img):
         if random.uniform(0, 1) < 0.1:
             out[row] = 0
         else:
-            shift = random.randint(-3, 3)
+            shift = int(np.random.normal(scale=2))
             out[row] = np.roll(img[row], shift, axis=0)
+
+    shift = int(np.random.normal(scale=1))
+    out = np.roll(out, shift, axis=0)
 
     return out
 
@@ -264,7 +263,7 @@ fb = np.zeros((height, width, 3), dtype=np.float32)
 
 
 #anim = MerryHS()
-anim = Korhal(fb.shape)
+anim = Rescue(fb.shape)
 
 
 

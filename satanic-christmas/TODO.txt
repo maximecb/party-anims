@@ -21,14 +21,19 @@ Going into k mode will only select that animation in or out
 
 TODO: random frame glitch
 
-TODO: Merry Christmas with random left-right row shift
-- you could also render one frame out of 2 or only render some frames for additionaly glitchiness
+TODO: Merry Christmas with glitching
+- glitch to hs at random frames
 
-TODO: random vertical shift in glitch fn
+TODO: r and k modes
+- just sample animations from different lists
+- draw a small square on the left or right
+
+TODO: try to implement animation switching code. Every 16 or 32 beats
 
 
 
 
+[DONE] TODO: random vertical shift in glitch fn
 
 [DONE] TODO: rescue glitch anim
 
