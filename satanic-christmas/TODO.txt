@@ -19,19 +19,23 @@ TODO: write the Merry Christmas animation class
 Idea: we can randomly cycle animations every 32 or 64 beats
 Going into k mode will only select that animation in or out
 
-TODO: random frame glitch
+TODO: try to improve the frame rate for Rescue
+- potentially, we could pre-render everything
 
+TODO: random frame glitch
 TODO: Merry Christmas with glitching
 - glitch to hs at random frames
 
-TODO: r and k modes
-- just sample animations from different lists
+TODO: code to detect r, k, n and switch mode
 - draw a small square on the left or right
 
-TODO: try to implement animation switching code. Every 16 or 32 beats
 
 
 
+
+
+
+[DONE] TODO: try to implement animation switching code. Every 16 or 32 beats
 
 [DONE] TODO: random vertical shift in glitch fn
 

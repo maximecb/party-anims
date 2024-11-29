@@ -55,7 +55,7 @@ class Anim:
         raise NotImplementedError
 
 class MerryHS(Anim):
-    def __init__(self):
+    def __init__(self, fb_shape):
         pass
 
     def beat(self, fb, beat_idx, t):
@@ -143,9 +143,6 @@ class Korhal(Anim):
         for i in range(60):
             draw_noise_line(fb)
         fb *= 0.97
-
-
-
 
 class Rescue(Anim):
     def __init__(self, fb_shape):
@@ -262,8 +259,12 @@ height = 1080
 fb = np.zeros((height, width, 3), dtype=np.float32)
 
 
-#anim = MerryHS()
-anim = Rescue(fb.shape)
+anims = [
+    MerryHS(fb.shape),
+    Rescue(fb.shape),
+    Korhal(fb.shape),
+]
+anim = anims[0]
 
 
 
@@ -276,6 +277,16 @@ for frame_idx in itertools.count(start=0):
 
     if beatclient.beat_received() or (opts.sim_beat and frame_idx % 15 == 0):
         print("|" * 40)
+
+
+        # Switch animation
+        # TODO: we should use a function to make sure a change occurs
+        if beat_idx > 0 and beat_idx % 32 == 0:
+            print('SWITCH ****')
+            anim = random.choice(anims)
+
+
+
         anim.beat(fb, beat_idx, start_t)
         beat_idx += 1
     else:
