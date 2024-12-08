@@ -258,16 +258,15 @@ height = 1080
 # In floating point format so we can fade out easily
 fb = np.zeros((height, width, 3), dtype=np.float32)
 
-
-anims = [
+normal_anims = [
     MerryHS(fb.shape),
-    Rescue(fb.shape),
-    Korhal(fb.shape),
 ]
-anim = anims[0]
+rescue_anims = normal_anims + [Rescue(fb.shape)]
+korhal_anims = normal_anims + [Korhal(fb.shape)]
 
+anim = normal_anims[0]
 
-
+mode = 'normal'
 
 beat_idx = 0
 
@@ -278,14 +277,15 @@ for frame_idx in itertools.count(start=0):
     if beatclient.beat_received() or (opts.sim_beat and frame_idx % 15 == 0):
         print("|" * 40)
 
-
         # Switch animation
-        # TODO: we should use a function to make sure a change occurs
         if beat_idx > 0 and beat_idx % 32 == 0:
             print('SWITCH ****')
-            anim = random.choice(anims)
-
-
+            if mode == 'normal':
+                anim = random.choice(normal_anims)
+            elif mode == 'rescue':
+                anim = random.choice(rescue_anims)
+            elif mode == 'korhal':
+                anim = random.choice(korhal_anims)
 
         anim.beat(fb, beat_idx, start_t)
         beat_idx += 1
@@ -295,10 +295,6 @@ for frame_idx in itertools.count(start=0):
 
     # Show the current frame
     cv2.imshow('image', fb) 
-
-    # Quit when 'q' is pressed
-    if cv2.waitKey(1) & 0xFF == ord('q'): 
-        break
   
     end_t = time.time()
     frame_t = end_t - start_t
@@ -310,5 +306,18 @@ for frame_idx in itertools.count(start=0):
     if frame_t < t_30fps:
         #print(t_30fps - frame_t)
         time.sleep(t_30fps - frame_t)
+
+    # Quit when 'q' is pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord('q'):
+        break
+    elif key == ord('n'):
+        mode = 'normal'
+    elif key == ord('r'):
+        mode = 'rescue'
+        cv2.rectangle(fb, (20, 910), (25, 915), (0, 0, 255), 1)
+    elif key == ord('k'):
+        mode = 'korhal'
+        cv2.rectangle(fb, (1800, 910), (1805, 915), (0, 0, 255), 1)
 
 cv2.destroyAllWindows()
