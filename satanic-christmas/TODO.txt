@@ -25,6 +25,7 @@ TODO: Merry Christmas with glitching
 
 TODO: could we increase the glitch intensity when there's a beat?
 - increase then decay
+
 TODO: pre-render frames for rescue anim
 - make it smoother
 => do the logic for pre-rendering frames first

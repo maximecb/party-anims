@@ -165,40 +165,50 @@ class Rescue(Anim):
             text="ON THE DECKS"
         )
 
-        # Pre-render some noise
-        self.noise = [np.random.uniform(0, 1, size=fb_shape) for i in range(0, 8)]
+        self.frames = [self.render_frame(fb_shape, i) for i in range(0, 30)]
+    
+        self.f_idx = 0
 
-        self.intensity = 0
-
-    def render_frame(self, fb, frame_idx, t):
-        fb[:] = self.rescue[:]
+    def render_frame(self, fb_shape, frame_idx):
+        fb = self.rescue.copy()
         fb += self.on_the_decks
-        fb *= self.noise[frame_idx % len(self.noise)]
-        fb[:] = glitch(fb) * self.intensity
+        fb *= np.random.uniform(0, 1, size=fb.shape) 
+
+        ratio = 1 - (frame_idx / 30)
+        scale = math.floor(ratio * 8)
+
+        print(scale)
+
+        fb[:] = glitch(fb, scale) * (ratio * ratio)
+
+        return fb
 
     def beat(self, fb, beat_idx, t):
-        self.intensity = 1
-        self.render_frame(fb, beat_idx, t)
+        self.f_idx = 0
 
     def render(self, fb, frame_idx, t):
-        self.intensity *= 0.90
+        f_idx = self.f_idx
+        self.f_idx += 1
 
-        if random.uniform(0, 1) < 0.10:
-            return
+        if f_idx < len(self.frames):
+            frame = self.frames[f_idx]
+        else:
+            frame = random.choice(self.frames[-4:])
+    
+        fb[:] = frame
 
-        self.render_frame(fb, beat_idx, t)
-
-def glitch(img):
+def glitch(img, scale=2):
     out = np.empty_like(img)
 
     for row in range(0, img.shape[0]):
         if random.uniform(0, 1) < 0.1:
             out[row] = 0
         else:
-            shift = int(np.random.normal(scale=2))
+            shift = int(np.random.normal(scale=scale))
             out[row] = np.roll(img[row], shift, axis=0)
 
-    shift = int(np.random.normal(scale=1))
+    # Vertical shift
+    shift = int(np.random.normal(scale=scale))
     out = np.roll(out, shift, axis=0)
 
     return out
