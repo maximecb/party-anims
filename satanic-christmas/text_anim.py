@@ -48,11 +48,50 @@ class Anim:
     def restart(self):
         pass
 
-    def beat(self, beat_idx, t):
+    def beat(self, fb, beat_idx, t):
         pass
 
     def render(self, fb, frame_idx, t):
         raise NotImplementedError
+
+class MerryGlitch(Anim):
+    def __init__(self, fb_shape):
+        pass
+
+        merry = draw_text(
+            fb.shape[0],
+            fb.shape[1],
+            x=220,
+            y=300,
+            font_size=260,
+            text="Merry Christmas"
+        )
+
+        hs = draw_text(
+            fb.shape[0],
+            fb.shape[1],
+            x=460,
+            y=300,
+            font_size=260,
+            text="Hail Satan"
+        )
+
+        self.merry_frames = [np.random.uniform(0, 1, size=fb_shape) * glitch(merry, 5) for i in range(16)]
+        self.hs_frames = [np.random.uniform(0, 1, size=fb_shape) * glitch(hs, 4) for i in range(16)]
+
+        self.glitch_count = 0
+
+    def render(self, fb, frame_idx, t):
+        if random.uniform(0, 1) < 0.025: 
+            fb[:] = random.choice(self.hs_frames)[:]
+            self.glitch_count = random.uniform(0, 3)
+            return
+
+        if self.glitch_count > 0:
+            self.glitch_count -= 1
+            return
+
+        fb[:] = random.choice(self.merry_frames)[:]
 
 class MerryHS(Anim):
     def __init__(self, fb_shape):
@@ -269,6 +308,7 @@ height = 1080
 fb = np.zeros((height, width, 3), dtype=np.float32)
 
 normal_anims = [
+    MerryGlitch(fb.shape),
     MerryHS(fb.shape),
 ]
 rescue_anims = normal_anims + [Rescue(fb.shape)]

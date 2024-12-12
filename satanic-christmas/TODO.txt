@@ -1,39 +1,13 @@
-TODO: clone pyopendmx repo
-
-TODO: make the Christmas animation slowly fade and only start the lines
-after 1 or 2 seconds for dramatic effect
-
-TODO: test on projector screen in the dark
-- need to know if this is actually feasible
-
-TODO: try to alternate animations every 10s
-TODO: plain hs fadeout animation
-
-TODO: modify the code to use the animation class
-
-TODO: write the Merry Christmas animation class
-- make it just fade Merry Christmas for now?
-
------------------------------------------------------------------------------
-
-Idea: we can randomly cycle animations every 32 or 64 beats
-Going into k mode will only select that animation in or out
-
-TODO: Merry Christmas with glitching
+[DONE] TODO: Merry Christmas with glitching
 - glitch to hs at random frames
 => we can pre-render a few glitch frames of both
 
-TODO: could we increase the glitch intensity when there's a beat?
+[DONE] TODO: could we increase the glitch intensity when there's a beat?
 - increase then decay
 
-TODO: pre-render frames for rescue anim
+[DONE] TODO: pre-render frames for rescue anim
 - make it smoother
 => do the logic for pre-rendering frames first
-
-
-
-
-
 
 [DONE] TODO: code to detect r, k, n and switch mode
 - draw a small square on the left or right
